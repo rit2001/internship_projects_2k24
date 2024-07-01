@@ -1,48 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import NoteList from './components/NoteList';
+import React, { useState } from 'react';
 import NoteEditor from './components/NoteEditor';
+import NoteList from './components/NoteList';
 import './App.css';
 
-function App() {
+const App = () => {
   const [notes, setNotes] = useState([]);
-  const [noteToEdit, setNoteToEdit] = useState(null);
 
-  useEffect(() => {
-    const storedNotes = JSON.parse(localStorage.getItem('notes'));
-    if (storedNotes) {
-      setNotes(storedNotes);
-    }
-  }, []);
+  const addNote = (note) => {
+    setNotes([note, ...notes]);
+  };
 
-  useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
+  const editNote = (noteToEdit) => {
+    const updatedNotes = notes.map(note => 
+      note === noteToEdit ? { ...note, isEditing: true } : note
+    );
+    setNotes(updatedNotes);
+  };
 
-  function handleSave(note) {
-    if (noteToEdit) {
-      setNotes(notes.map(n => (n.id === note.id ? note : n)));
-      setNoteToEdit(null);
-    } else {
-      setNotes([...notes, note]);
-    }
-  }
-
-  function handleDelete(id) {
-    setNotes(notes.filter(note => note.id !== id));
-  }
-
-  function handleEdit(id) {
-    const note = notes.find(note => note.id === id);
-    setNoteToEdit(note);
-  }
+  const deleteNote = (index) => {
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    setNotes(updatedNotes);
+  };
 
   return (
     <div className="app">
       <h1>Note Taking App</h1>
-      <NoteEditor onSave={handleSave} noteToEdit={noteToEdit} />
-      <NoteList notes={notes} onDelete={handleDelete} onEdit={handleEdit} />
+      <NoteEditor onAddNote={addNote} />
+      <NoteList notes={notes} onEditNote={editNote} onDeleteNote={deleteNote} />
     </div>
   );
-}
+};
 
 export default App;

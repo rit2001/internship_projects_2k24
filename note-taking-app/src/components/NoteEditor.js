@@ -1,45 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import './NoteEditor.js';
 
-function NoteEditor({ onSave, noteToEdit }) {
+const NoteEditor = ({ onAddNote }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [bgColor, setBgColor] = useState('bg-white');
 
-  useEffect(() => {
-    if (noteToEdit) {
-      setTitle(noteToEdit.title);
-      setContent(noteToEdit.content);
-    } else {
-      setTitle('');
-      setContent('');
-    }
-  }, [noteToEdit]);
-
-  function handleSave() {
+  const handleAddNote = () => {
     if (title && content) {
-      onSave({ title, content, id: noteToEdit ? noteToEdit.id : Date.now() });
+      onAddNote({
+        title,
+        content,
+        bgColor
+      });
       setTitle('');
       setContent('');
+      setBgColor('bg-white');
     }
-  }
+  };
 
   return (
     <div className="note-editor">
-      <input 
-        type="text" 
-        placeholder="Title" 
-        value={title} 
-        onChange={e => setTitle(e.target.value)} 
+      <input
+        type="text"
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
       />
-      <textarea 
-        placeholder="Content" 
-        value={content} 
-        onChange={e => setContent(e.target.value)} 
-      ></textarea>
-      <button onClick={handleSave}>
-        {noteToEdit ? 'Update Note' : 'Add Note'}
-      </button>
+      <textarea
+        placeholder="Write your note here..."
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+      <div className="background-picker">
+        <button className="bg-white" onClick={() => setBgColor('bg-white')}></button>
+        <button className="bg-light" onClick={() => setBgColor('bg-light')}></button>
+        <button className="bg-light-blue" onClick={() => setBgColor('bg-light-blue')}></button>
+        <button className="bg-light-green" onClick={() => setBgColor('bg-light-green')}></button>
+        <button className="bg-primary" onClick={() => setBgColor('bg-primary')}></button>
+        <button className="bg-secondary" onClick={() => setBgColor('bg-secondary')}></button>
+        <button className="bg-success" onClick={() => setBgColor('bg-success')}></button>
+        <button className="bg-danger" onClick={() => setBgColor('bg-danger')}></button>
+        <button className="bg-warning" onClick={() => setBgColor('bg-warning')}></button>
+        <button className="bg-info" onClick={() => setBgColor('bg-info')}></button>
+      </div>
+      <button onClick={handleAddNote}>Add Note</button>
     </div>
   );
-}
+};
 
 export default NoteEditor;
